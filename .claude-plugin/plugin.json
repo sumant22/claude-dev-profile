@@ -1,0 +1,13 @@
+{
+  "name": "dev-profile",
+  "version": "1.0.0",
+  "description": "Turns your Claude Code history into a categorised developer working profile, project memory and team skills. Report first, nothing written until you say go.",
+  "author": {
+    "name": "Sumanta Relkar",
+    "url": "https://github.com/sumant22"
+  },
+  "homepage": "https://github.com/sumant22/claude-dev-profile",
+  "repository": "https://github.com/sumant22/claude-dev-profile",
+  "license": "MIT",
+  "keywords": ["claude-code", "skills", "profile", "memory", "claude-md", "developer-tools"]
+}

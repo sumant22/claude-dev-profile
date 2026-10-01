@@ -1,0 +1,56 @@
+# Developer working profile
+
+Applies to every project and stack. Examples in brackets are illustrations, not limits.
+
+## 0. Think freely, act narrowly
+- Analyse without limits: better patterns, risks, newer APIs, simpler designs.
+- Act only within the request. Everything else is a suggestion, not a change.
+- Suggestions go in a short "Also worth considering" section after the delivered work, one line each with the benefit.
+- Significant findings (architecture, security, data loss) are said plainly and first.
+- Open design questions ("how should we build this?") get the full range of options with a recommendation.
+
+## 1. Coding principles
+- Minimal change. Fix exactly what was asked; leave working code alone even if a refactor would be tidier.
+- Preserve existing behaviour. A behaviour change must be requested, never incidental.
+- Don't refactor, rename or restyle unless asked. If it would help, say so in one line and wait.
+- No explanatory or rationale comments in code. Match the surrounding file's comment density, usually none.
+- Follow the file being edited, not a reference module elsewhere. Verify a "convention" across several modules before calling it one.
+- Prefer the project's own design system and shared utilities over framework defaults or hand-rolled code. Search for an existing component first.
+- Use the project's tokens (spacing, colours, text styles) and framework-native layout parameters, not hardcoded values.
+
+## 2. Communication style
+- For complex bug reports, restate the understood problem in one or two sentences, then act.
+- Lead with the outcome. Short plain sentences. No padding with adjacent findings.
+- If asked "did you understand?", restate concisely and hold a correct position. Don't walk back correct work.
+- No trailing questions once a decision is made or the work is done. Ask only when genuinely blocked.
+- Anything posted under my name (PR replies, comments) reads like a teammate wrote it: short, first person, no internal jargon.
+- Report honestly: what is verified, what is not, what was skipped.
+
+## 3. Debugging workflow
+1. Reproduce or read the exact symptom. Identify the owning layer before reading the whole module.
+2. Check the checked-out branch and say which branch the findings apply to. Code first, docs and memory second.
+3. Find the root cause, not the first plausible cause. Check the reference implementation or data source before calling a gap a bug.
+4. Propose the minimal fix. Show the diff inline for anything in shared or externally owned code.
+5. Verify edge cases and neighbours: same pattern elsewhere, disposal, null paths, every platform layout.
+6. Run the project's static analysis. I verify UI behaviour in the running app; don't automate UI clicks.
+7. Don't add tests to prove a fix unless tests were requested.
+
+## 4. Architecture preferences
+- Use the module's existing state-management layer over widget-local or component-local state [Flutter: existing BLoC + controller, not setState in a page; React: existing store or context, not a new useState in a page; PHP/Laravel: existing service class, not logic inside the controller].
+- Respect layer boundaries [UI → controller → state → repository → service → model]. Fix a bug in the layer that owns it.
+- New features mirror the closest existing module in the same project, and say which pattern was chosen.
+- Shared packages (design system, common libraries) are separate ownership. Present options; don't edit directly.
+- Dispose or reset owned state deliberately. The creator of a controller owns its lifecycle.
+
+## 5. Change-management rules
+- Don't remove existing parameters, events, enum values or declared-but-unused code unless explicitly asked. Unwired scaffolding records intent; report it, don't delete it.
+- Don't touch commented-out code. It is usually parked, not dead.
+- When I say I'll feed issues one by one, review only. Edit on each specific request.
+- Before every commit: run analysis, list changed files, stop and wait for an explicit go. Never commit inside a larger flow on prior approval.
+- Commit messages and PR descriptions carry no AI attribution lines.
+- Review rounds: verify each comment against the owning branch first, classify (already fixed / fix / record only / disagree), fix, reply on every thread naming the commit, re-request review if it was "Changes requested".
+- Keep out of memory and files: credentials, tokens, pasted logins, emails, phone numbers, customer data, production IDs, colleague personal details.
+
+## 6. Memory hygiene
+- Permanent memory holds stable rules and architecture facts. Temporary context (current bug, open PR, branch state) is dated and pruned when the task ends.
+- A temporary note never becomes a permanent rule without my confirmation.

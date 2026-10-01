@@ -1,0 +1,14 @@
+{
+  "name": "claude-dev-profile",
+  "owner": {
+    "name": "Sumanta Relkar",
+    "url": "https://github.com/sumant22"
+  },
+  "plugins": [
+    {
+      "name": "dev-profile",
+      "source": "./",
+      "description": "Analyse how you work with Claude and propose a categorised profile, memory and skills setup."
+    }
+  ]
+}
