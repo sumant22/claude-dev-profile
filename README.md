@@ -46,8 +46,10 @@ Run these in Claude Code in a **terminal**. IDE extensions (VS Code, JetBrains a
 /plugin install dev-profile@claude-dev-profile
 ```
 
-Plugin skills are namespaced, so the command is `/dev-profile:dev-profile`. Updates arrive with
-`/plugin marketplace update claude-dev-profile`.
+Plugin skills are namespaced, so the command is `/dev-profile:dev-profile`.
+
+To update, run `claude plugin update dev-profile@claude-dev-profile` in your terminal.
+To update automatically, open `/plugin` → **Marketplaces** → **claude-dev-profile** → **Enable auto-update**.
 
 ### Option 2 — copy the skill (plain `/dev-profile` command)
 
