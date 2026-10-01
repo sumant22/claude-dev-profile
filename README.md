@@ -34,9 +34,12 @@ to propose to your teammates.
 
 ## Install
 
+Choose **one** method below, not both. If you install it both ways, the skill appears twice in the `/` list.
+
 ### Option 1 — plugin (one command)
 
-Inside Claude Code:
+Run these in Claude Code in a **terminal**. IDE extensions (VS Code, JetBrains and others) may not support
+`/plugin` commands in their chat panel, so open the IDE's built-in terminal and start `claude` there.
 
 ```
 /plugin marketplace add sumant22/claude-dev-profile
