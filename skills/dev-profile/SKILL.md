@@ -13,7 +13,8 @@ until approved.
 
 Arguments: `/dev-profile` runs the full analysis. `/dev-profile apply` applies the plan approved earlier in
 this same session; if no report exists in the current conversation, say so and offer to run the analysis
-first instead of guessing a plan. `/dev-profile privacy` runs only Step 4.
+first instead of guessing a plan. `/dev-profile privacy` runs only Step 4. `/dev-profile undo` restores the
+most recent backup (see Backup and undo).
 
 ## Step 1 — Gather evidence
 
@@ -32,7 +33,8 @@ live in the transcripts and the git history. Use whatever exists, in this order:
 4. **The codebase** — patterns the developer already follows, so the profile mirrors reality rather than
    inventing a style.
 5. The memory directory and its index file, if present.
-6. CLAUDE.md files: global (`~/.claude/CLAUDE.md`), repo root, sub-folders, if present.
+6. CLAUDE.md files: global (`~/.claude/CLAUDE.md`), repo root, sub-folders, if present. Also `AGENTS.md`
+   at the repo root if present: other AI tools read it, and it often drifts from CLAUDE.md.
 7. Skills under the repo's `.claude/skills` and the global `~/.claude/skills`, if present.
 8. Hooks and permissions in `settings.json` / `settings.local.json`, if present.
 9. The current conversation.
@@ -45,7 +47,7 @@ short interview instead: one question per bucket 1–4 and 6, each with two or t
 "skip" answer, then build the profile from the answers and mark every rule as *stated, not yet observed*.
 The next run of `/dev-profile` upgrades rules to *confirmed* once transcripts show them in practice.
 
-Steps 1–5 are read-only. Nothing is created, moved or deleted anywhere until the developer says go, so
+Steps 1–6 are read-only. Nothing is created, moved or deleted anywhere until the developer says go, so
 existing memory, skills and hooks keep working unchanged.
 
 Code first, notes second. Never assert a preference without evidence. State the checked-out branch.
@@ -75,6 +77,15 @@ For each finding record: rule in one line · evidence (quote or action, dated if
 Scope test: would a teammate on the same repo want the same thing? Yes → team. It is about how this one
 developer prefers to be worked with → personal.
 
+Global or project test: a personal rule goes to the global profile only if the same correction appears in
+**two or more projects** (`history.jsonl` records the project for each prompt). Seen in one project only →
+that project's memory, even if it sounds general. Without `history.jsonl`, fall back to the scope test and
+mark the placement *inferred*.
+
+Rule quality test: a rule must be specific enough to point at a moment it was broken. "Write clean code" or
+"be careful" fails; "no refactoring outside the lines the fix touches" passes. Rewrite a vague rule into
+the concrete behaviour the evidence shows, or drop it, and say which in the report.
+
 ## Step 3 — Place by type, not by content
 
 | Finding type | Goes to | Visibility |
@@ -97,7 +108,20 @@ List anything stored that must not be: credentials, tokens, pasted logins, email
 production data, internal IDs, colleague personal details. Propose removal or anonymisation. Check skills and
 repo CLAUDE.md with extra care because the team reads them.
 
-## Step 5 — Keep thinking open
+## Step 5 — Conflicts and context cost
+
+Rules live in several places and drift apart. Compare every rule found in the global CLAUDE.md, repo and
+sub-folder CLAUDE.md files, `AGENTS.md`, memory and skills. Report each contradiction (for example, global
+says "no tests unless asked", repo says "every fix needs a test") with both locations and a proposed
+resolution: which one wins, or how to scope each so both can stand. Repo-level team rules normally win over
+personal rules for that repo.
+
+Everything in a CLAUDE.md loads into every session; skills and linked memory load only when needed. Estimate
+the always-loaded size (approximate word count across the global and repo CLAUDE.md files) before and after
+the proposed plan. Propose moving long, task-specific detail out of CLAUDE.md into a skill or a linked
+memory file whenever that keeps the profile shorter without losing the rule.
+
+## Step 6 — Keep thinking open
 
 The profile's first principle: **analyse freely, act narrowly.** Rules limit what is changed unasked, never
 what is noticed or suggested. Suggestions go in a short separate section after the delivered work, one line
@@ -106,7 +130,8 @@ rules and get the full range of options with a recommendation.
 
 ## Output — one report, easy to scan (no files changed yet)
 
-1. **Summary** — five lines max on how this developer works, plain words, including what already works well.
+1. **Summary** — five lines max on how this developer works, plain words, including what already works well,
+   plus one line of context cost: "always loaded: ~N words across N files; after this plan: ~N".
 2. **Action table** — Create / Update / Delete / Keep, one row per file, rule, pattern or skill, with columns:
    type (profile / memory / skill / hook / repo-CLAUDE.md) · scope (personal / team) · reason.
 3. **Proposed global profile** — complete, under 80 lines, sections 0–6 (0 = analyse freely, act narrowly).
@@ -116,11 +141,23 @@ rules and get the full range of options with a recommendation.
 6. **Working-habit observations** — what costs time or risk today and the one change that fixes each.
    Specific and plain, no blame.
 7. **Repeated prompts** — each repeated prompt with a proposed reusable template or skill trigger.
-8. **Privacy findings.**
-9. **Open questions** — where evidence conflicts or is thin.
+8. **Conflicts** — each contradiction between rules, where both live, and the proposed resolution.
+9. **Privacy findings.**
+10. **Open questions** — where evidence conflicts or is thin.
 
-Then stop. Write, move or delete nothing until the developer says go. On go, apply the plan exactly and show
-the final file list. Temporary notes never become permanent rules without explicit confirmation.
+Then stop. Write, move or delete nothing until the developer says go. On go, back up first (below), then
+apply the plan exactly and show the final file list. Temporary notes never become permanent rules without
+explicit confirmation.
+
+## Backup and undo
+
+Before writing anything on go, copy every file the plan will change or delete into
+`~/.claude/dev-profile-backups/<YYYY-MM-DD-HHMM>/`, keeping the original relative paths. Only then write. End
+the run by naming the backup folder.
+
+`/dev-profile undo` restores the most recent backup folder: copy each file back to its original location,
+delete any file the plan created that did not exist before (the backup folder lists them in `created.txt`),
+and show the list of files restored. Older backups stay on disk for manual recovery; undo never deletes them.
 
 ## Sharing this skill
 

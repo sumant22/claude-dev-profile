@@ -5,11 +5,8 @@ A Claude Code skill that turns your chat history into a small, categorised set o
 Run `/dev-profile` inside any project. Claude reads your past sessions, memory, skills and git history,
 then shows you one report: how you work, what you repeat, what slows you down, which rules should become
 a personal profile, which should become team skills, and what private data should not be stored.
-Nothing on disk changes until you say **go**.
-
-> **Before you say go:** the skill rewrites files such as `~/.claude/CLAUDE.md`, memory files and skills,
-> and this version does not keep a copy of the old ones. Back them up first if you may want them back.
-> Automatic backup and undo are planned for the next release.
+Nothing on disk changes until you say **go**. When you do, every file about to change is backed up first,
+and `/dev-profile undo` puts it all back.
 
 Works for any language or framework. The skill itself contains no personal data.
 
@@ -83,23 +80,32 @@ Start a new Claude Code session. `/dev-profile` appears in the skill list.
 
 | Command | What happens |
 |---|---|
-| `/dev-profile` | Full analysis. Read-only. Produces the nine-part report below. |
+| `/dev-profile` | Full analysis. Read-only. Produces the ten-part report below. |
 | `/dev-profile apply` | Applies the plan you approved in the report. Run it in the same session as the report. |
 | `/dev-profile privacy` | Only the privacy scan: credentials, emails, customer data stored where they should not be. |
+| `/dev-profile undo` | Restores the most recent backup, so a **go** you regret is reversible. |
 
 ### The report
 
-1. Summary of how you work, five lines, including what already works well
+1. Summary of how you work, five lines, including what already works well, plus how much text is loaded
+   into every session before and after the plan
 2. Action table: Create / Update / Delete / Keep, one row per file, rule or skill, each labelled personal or team
 3. Proposed global profile for `~/.claude/CLAUDE.md`, under 80 lines
 4. Proposed memory index, grouped by category
 5. Skills: existing ones with keep / update / merge / retire, plus proposed new ones with trigger sentences
 6. Working-habit observations: what costs you time or risk today, and the one change that fixes each
 7. Repeated prompts, each with a proposed reusable template or skill
-8. Privacy findings
-9. Open questions where the evidence is thin or conflicts
+8. Conflicts: rules that contradict each other across `CLAUDE.md`, `AGENTS.md`, memory and skills, with a resolution
+9. Privacy findings
+10. Open questions where the evidence is thin or conflicts
 
-Review it. Edit anything. Then say **go**. Claude applies exactly the approved rows and lists the final files.
+Review it. Edit anything. Then say **go**. Claude backs up every file the plan touches to
+`~/.claude/dev-profile-backups/<date-time>/`, applies exactly the approved rows, and lists the final files.
+If you change your mind, `/dev-profile undo` restores that backup.
+
+Two checks keep the profile small: a rule goes global only if the same correction shows up in two or more
+projects, and every rule must be concrete enough to point at a moment it was broken. Vague rules are rewritten
+or dropped.
 
 ### Where the evidence comes from
 
@@ -110,7 +116,7 @@ The skill reads, in order of usefulness:
 2. Prompt history at `~/.claude/history.jsonl`
 3. Your own git commits in the repo
 4. The codebase itself
-5. Memory, CLAUDE.md, skills, hooks, if they exist
+5. Memory, CLAUDE.md, `AGENTS.md`, skills, hooks, if they exist
 6. The current conversation
 
 Transcripts may contain things you pasted, including secrets. The skill reads them for patterns only and
