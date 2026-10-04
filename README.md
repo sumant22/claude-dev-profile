@@ -7,6 +7,10 @@ then shows you one report: how you work, what you repeat, what slows you down, w
 a personal profile, which should become team skills, and what private data should not be stored.
 Nothing on disk changes until you say **go**.
 
+> **Before you say go:** the skill rewrites files such as `~/.claude/CLAUDE.md`, memory files and skills,
+> and this version does not keep a copy of the old ones. Back them up first if you may want them back.
+> Automatic backup and undo are planned for the next release.
+
 Works for any language or framework. The skill itself contains no personal data.
 
 ## Why
@@ -141,6 +145,16 @@ skills/dev-profile/SKILL.md       the skill. Copy this folder for a manual insta
 templates/CLAUDE.md.example       a starting global profile you can edit by hand
 CHANGELOG.md                      release notes
 ```
+
+## Roadmap
+
+Ideas for upcoming versions. What gets built next depends on your feedback.
+
+- **`/dev-profile check`:** see which rules are working, which never fire, and which corrections still repeat
+- **Export to other AI tools:** write your rules to `AGENTS.md` (Codex, Cursor, Copilot) plus a paste-ready ChatGPT version
+- **Secret cleanup:** help clearing passwords or tokens left in old session transcripts
+
+Have an idea or a problem? [Open an issue](https://github.com/sumant22/claude-dev-profile/issues).
 
 ## Contributing
 

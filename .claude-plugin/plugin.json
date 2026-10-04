@@ -1,6 +1,6 @@
 {
   "name": "dev-profile",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Turns your Claude Code history into a categorised developer working profile, project memory and team skills. Report first, nothing written until you say go.",
   "author": {
     "name": "Sumanta Relkar",

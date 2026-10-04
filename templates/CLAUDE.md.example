@@ -36,7 +36,7 @@ Applies to every project and stack. Examples in brackets are illustrations, not 
 7. Don't add tests to prove a fix unless tests were requested.
 
 ## 4. Architecture preferences
-- Use the module's existing state-management layer over widget-local or component-local state [Flutter: existing BLoC + controller, not setState in a page; React: existing store or context, not a new useState in a page; PHP/Laravel: existing service class, not logic inside the controller].
+- Use the module's existing state-management layer over widget-local or component-local state [Flutter: existing BLoC + controller, not setState in a page; React: existing store or context, not a new useState in a page; PHP/Laravel: existing service class, not logic inside the controller; iOS/SwiftUI: existing ViewModel or ObservableObject, not new @State in a view].
 - Respect layer boundaries [UI → controller → state → repository → service → model]. Fix a bug in the layer that owns it.
 - New features mirror the closest existing module in the same project, and say which pattern was chosen.
 - Shared packages (design system, common libraries) are separate ownership. Present options; don't edit directly.
